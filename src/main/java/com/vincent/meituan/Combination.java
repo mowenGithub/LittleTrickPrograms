@@ -1,5 +1,6 @@
 package com.vincent.meituan;
 
+import java.math.BigInteger;
 import java.util.Scanner;
 
 /**
@@ -27,8 +28,8 @@ public class Combination {
                 return;
             }
 
-            System.out.println(backPack(N));
-            System.out.println(f(0, N));
+//            System.out.println(backPack(N));
+            System.out.println(getCom(N));
         } catch (Exception e) {
             System.out.println(ILLEGAL_INPUT);
         }
@@ -36,6 +37,7 @@ public class Combination {
 
     /**
      * 背包法  太慢  相当于加法  n^6
+     * 当然这里也可以像下面递归那样处理，节省一步，但为了验证和打印所有情况来做对照验证，故不优化,也不做大数处理
      */
     public static int backPack(int N) {
         int result = 0, temp1 = 0, temp2 = 0, temp3 = 0, temp4 = 0, temp5 = 0;
@@ -70,15 +72,26 @@ public class Combination {
         return result;
     }
 
+    private static String getCom(int N) {
+        int number = f(0, N);
+        if (number < 0) {    //这里10000之类的结果大数只会循环一次，故特殊处理
+            BigInteger sum = BigInteger.valueOf(Integer.MAX_VALUE);
+            sum = sum.add(BigInteger.valueOf(number - Integer.MIN_VALUE + 1));
+            return sum.toString();
+        }
+        return String.valueOf(number);
+    }
+
     /**
-     * 下面这种递归 本质还是加法，怎么改进成乘法？
+     * 下面这种递归 本质还是背包加法，怎么改进成乘法？
+     *
      * @param index 是指该用baseNumbers里面第几个开始算
-     * @param last 指现在N还剩多少
+     * @param last  指现在N还剩多少
      * @return
      */
     private static int f(int index, int last) {
-        if (index == 5) {
-            return 1;
+        if (index == BASE_NUMBERS.length - 2) {
+            return last / BASE_NUMBERS[BASE_NUMBERS.length - 2] + 1;
         }
 
         int num = last / BASE_NUMBERS[index];
