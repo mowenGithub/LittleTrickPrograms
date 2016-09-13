@@ -29,7 +29,7 @@ public class Combination {
             }
 
 //            System.out.println(backPack(N));
-            System.out.println(getCom(N));
+            System.out.println(f(0, N));
         } catch (Exception e) {
             System.out.println(ILLEGAL_INPUT);
         }
@@ -72,16 +72,6 @@ public class Combination {
         return result;
     }
 
-    private static String getCom(int N) {
-        int number = f(0, N);
-        if (number < 0) {    //这里10000之类的结果大数只会循环一次，故特殊处理
-            BigInteger sum = BigInteger.valueOf(Integer.MAX_VALUE);
-            sum = sum.add(BigInteger.valueOf(number - Integer.MIN_VALUE + 1));
-            return sum.toString();
-        }
-        return String.valueOf(number);
-    }
-
     /**
      * 下面这种递归 本质还是背包加法，怎么改进成乘法？
      *
@@ -89,15 +79,15 @@ public class Combination {
      * @param last  指现在N还剩多少
      * @return
      */
-    private static int f(int index, int last) {
+    private static long f(int index, int last) {
         if (index == BASE_NUMBERS.length - 2) {
             return last / BASE_NUMBERS[BASE_NUMBERS.length - 2] + 1;
         }
 
         int num = last / BASE_NUMBERS[index];
 
-        int total = 0;
-        int temp;
+        long total = 0;
+        long temp;
         for (int i = 0; i <= num; i++) {
             temp = f(++index, last - i * BASE_NUMBERS[--index]);
             if (temp == 0) {
